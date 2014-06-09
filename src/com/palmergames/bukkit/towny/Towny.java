@@ -5,6 +5,7 @@ import ca.xshade.questionmanager.Option;
 import ca.xshade.questionmanager.Question;
 import com.earth2me.essentials.Essentials;
 import com.nijiko.permissions.PermissionHandler;
+import com.palmergames.bukkit.metrics.Metrics;
 import com.palmergames.bukkit.towny.command.*;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
@@ -75,6 +76,16 @@ public class Towny extends JavaPlugin {
 	public void onEnable() {
 
 		System.out.println("====================      Towny      ========================");
+		
+		/*
+		 * Register Metrics
+		 */
+		try {
+		    Metrics metrics = new Metrics(this);
+		    metrics.start();
+		} catch (IOException e) {
+			System.err.println("[Towny] Error setting up metrics");
+		}
 
 		version = this.getDescription().getVersion();
 
@@ -375,7 +386,7 @@ public class Towny extends JavaPlugin {
 			boolean display = false;
 			TownyLogger.log.info("------------------------------------");
 			TownyLogger.log.info("[Towny] ChangeLog up until v" + getVersion());
-			String lastVersion = TownySettings.getLastRunVersion(getVersion());
+			String lastVersion = TownySettings.getLastRunVersion(getVersion()).split("_")[0];
 			for (String line : changeLog) { // TODO: crawl from the bottom, then
 											// past from that index.
 				if (line.startsWith("v" + lastVersion))
